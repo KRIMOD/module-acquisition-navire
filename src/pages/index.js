@@ -6,7 +6,7 @@ export default function Home () {
   const [investment, setInvestment] = useState(0)
   const [operatingCost, setOperatingCost] = useState(0)
   const [dryDock, setDryDock] = useState(0)
-  const [roi, setRoi] = useState(0)
+  // const [roi, setRoi] = useState(0)
 
   const handleInvestmentChange = (e) => setInvestment(e.target.value)
   const handleOperatingCostChange = (e) => setOperatingCost(e.target.value)
@@ -36,12 +36,21 @@ export default function Home () {
             </div>
 
             <div className='grid items-center grid-cols-2'>
-              <label className='text-gray-700 dark:text-gray-200' htmlFor='roi'>Retour sur Investissement</label>
-              <input onChange={handleRoiChange} id='roi' type='number' className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring' />
+              <label className='text-gray-700 dark:text-gray-200' htmlFor='roi'>Periode</label>
+              <select
+                // className='mr-2 rounded-md'
+                className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring'
+                defaultValue={periode}
+                onChange={(e) => setPeriode(e.target.value)}
+              >
+                <option value={5}>5 ans</option>
+                <option value={10}>10 ans</option>
+                <option value={15}>15 ans</option>
+              </select>
             </div>
           </div>
 
-          <div className='flex justify-end mt-6'>
+          {/* <div className='flex justify-end mt-6'>
             <select
               className='mr-2 rounded-md'
               defaultValue={periode}
@@ -52,12 +61,12 @@ export default function Home () {
               <option value={15}>15 ans</option>
             </select>
             <button className='px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600'>Estimer</button>
-          </div>
+          </div> */}
         </form>
       </section>
       <section className='max-w-4xl p-6 mx-auto mt-4 bg-white rounded-md shadow-md dark:bg-gray-800'>
 
-        <CardTable periode={periode} />
+        <CardTable periode={periode} investment={investment} dryDock={dryDock} operatingCost={operatingCost} />
         <p className='text-xs text-blueGray-600'>*Formule de calcule : Coûts annuels = Invest + OPEX + DRYDOCK + Investissement + ROI </p>
 
       </section>

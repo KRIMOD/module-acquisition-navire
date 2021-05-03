@@ -1,4 +1,8 @@
-export default function CardTable ({ periode }) {
+import React from 'react'
+
+export default function CardTable ({ periode, investment, dryDock, operatingCost }) {
+  let previousAnnualCost = 0
+  let sumzAcc = 0
   return (
     <>
       <div
@@ -52,52 +56,67 @@ export default function CardTable ({ periode }) {
               {/* Contenu */}
               {Array(Number(periode))
                 .fill()
-                .map((_, index) => (
-                  <tr className='text-xs text-blueGray-800' key={index}>
-                    <th className='flex items-center p-4 px-6 text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
-                      <span
-                        className='flex-1 font-bold text-center '
-                      >
-                        {index + 1}
-                      </span>
-                    </th>
-                    <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
-                      <span
-                        className='ml-3 '
-                      >
-                        X,XXX,XXX
-                      </span>
-                    </td>
-                    <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
-                      <span
-                        className='ml-3'
-                      >
-                        X,XXX,XXX
-                      </span>
-                    </td>
-                    <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
-                      <span
-                        className='ml-3'
-                      >
-                        X,XXX,XXX
-                      </span>
-                    </td>
-                    <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
-                      <span
-                        className='ml-3 '
-                      >
-                        X,XXX,XXX
-                      </span>
-                    </td>
-                    <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
-                      <span
-                        className='ml-3 '
-                      >
-                        X,XXX,XXX
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                .map((_, index) => {
+                  const investmentPerYear = periode !== 0 ? investment / periode : 0
+                  const dryDockPerYear = periode !== 0 ? dryDock / periode : 0
+                  const opex = operatingCost * 360
+                  const annualCost = (index === 0) ? investmentPerYear + opex + dryDockPerYear + investment / periode : previousAnnualCost - investmentPerYear / periode
+                  const sumz = annualCost / 12
+                  sumzAcc += annualCost
+
+                  previousAnnualCost = annualCost
+                  return (
+                    <tr className='text-xs text-blueGray-800' key={index}>
+                      <th className='flex items-center p-4 px-6 text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
+                        <span
+                          className='flex-1 font-bold text-center '
+                        >
+                          {index + 1}
+                        </span>
+                      </th>
+                      <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
+                        <span
+                          className='ml-3 '
+                        >
+                          {/* X,XXX,XXX */}
+                          {investmentPerYear.toLocaleString('en-US')}
+                        </span>
+                      </td>
+                      <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
+                        <span
+                          className='ml-3'
+                        >
+                          {/* X,XXX,XXX */}
+                          {opex.toLocaleString('en-US')}
+                        </span>
+                      </td>
+                      <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
+                        <span
+                          className='ml-3'
+                        >
+                          {/* X,XXX,XXX */}
+                          {dryDockPerYear.toLocaleString('en-US')}
+                        </span>
+                      </td>
+                      <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
+                        <span
+                          className='ml-3 '
+                        >
+                          {/* X,XXX,XXX */}
+                          {annualCost.toLocaleString('en-US')}
+                        </span>
+                      </td>
+                      <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
+                        <span
+                          className='ml-3 '
+                        >
+                          {/* X,XXX,XXX */}
+                          {sumz.toLocaleString('en-US')}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
 
               {/* Coûts total moyen */}
               <tr className='text-xs text-blueGray-700'>
@@ -126,7 +145,7 @@ export default function CardTable ({ periode }) {
                 <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
                   <span
                     className='ml-3 text-sm font-bold'
-                  >X,XXX,XXX
+                  >{(sumzAcc / 10).toLocaleString('en-US')}
                   </span>
                 </td>
                 <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
@@ -162,7 +181,9 @@ export default function CardTable ({ periode }) {
                 <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
                   <span
                     className='ml-3 text-sm font-bold'
-                  >X,XXX,XXX
+                  >
+                    {/* X,XXX,XXX */}
+                    {Math.round(((sumzAcc / 10) / 12)).toLocaleString('en-US')}
                   </span>
                 </td>
                 <td className='items-center p-4 px-6 align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap'>
